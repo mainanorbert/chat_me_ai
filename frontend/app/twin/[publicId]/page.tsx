@@ -13,6 +13,8 @@ type TwinPageProps = {
 type PublicProfile = {
   firstName: string;
   secondName: string;
+  contactEmail: string | null;
+  contactPhone: string | null;
   githubUrl: string | null;
   linkedinUrl: string | null;
   otherUrl: string | null;
@@ -107,16 +109,33 @@ export default async function TwinPage({ params }: TwinPageProps) {
     profile.githubUrl ? { href: profile.githubUrl, label: "GitHub" } : null,
     profile.otherUrl ? { href: profile.otherUrl, label: "Other Link" } : null,
   ].filter(Boolean) as Array<{ href: string; label: string }>;
+  const publicContact =
+    profile.contactEmail || profile.contactPhone
+      ? { email: profile.contactEmail, phone: profile.contactPhone }
+      : null;
   return (
     <main className="min-h-screen bg-[#050505] text-white">
       <header className="border-b border-white/12 bg-black">
         <div className="mx-auto flex min-h-16 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-          <a href="#" className="shrink-0 text-lg font-semibold text-white sm:text-2xl">
+          <a href="#" className="shrink-0 text-base font-semibold text-white sm:text-2xl">
             Chat Me AI
           </a>
 
           <nav className="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3">
-            <div className="flex min-w-0 items-center justify-end gap-1 sm:gap-2">
+            {publicContact ? (
+              <a
+                href="#contact"
+                aria-label="Contact"
+                className="inline-flex h-9 w-9 shrink-0 items-center justify-center px-0 text-sm font-semibold text-white/82 transition hover:text-white sm:h-auto sm:min-h-10 sm:w-auto sm:min-w-0 sm:rounded-full sm:border sm:border-white/18 sm:px-4 sm:hover:bg-white/10"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 sm:hidden">
+                  <rect x="3.5" y="5.5" width="17" height="13" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
+                  <path d="m4.5 7 7.5 6 7.5-6" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                </svg>
+                <span className="hidden sm:inline">Contact</span>
+              </a>
+            ) : null}
+            <div className="ml-3 flex min-w-0 items-center justify-end gap-1 sm:ml-8 sm:gap-2">
               {socialLinks.map((item) => (
                 <a
                   key={item.label}
@@ -133,7 +152,7 @@ export default async function TwinPage({ params }: TwinPageProps) {
             </div>
             <a
               href="#chat"
-              className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-full bg-white px-4 text-sm font-semibold text-black transition hover:bg-white/88 sm:min-h-11 sm:px-5"
+              className="inline-flex min-h-9 shrink-0 items-center justify-center rounded-full bg-white px-3 text-xs font-semibold text-black transition hover:bg-white/88 sm:min-h-11 sm:px-5 sm:text-sm"
             >
               Chat Now
             </a>
@@ -194,6 +213,32 @@ export default async function TwinPage({ params }: TwinPageProps) {
             <p className="mt-4 max-w-3xl border-t border-white/10 pt-4 text-sm leading-6 text-white/58">
               {profile.persona}
             </p>
+
+            {publicContact ? (
+              <section id="contact" className="mt-5 scroll-mt-20 border-t border-white/10 pt-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">
+                  Get in touch
+                </p>
+                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
+                  {publicContact.email ? (
+                    <a
+                      href={`mailto:${publicContact.email}`}
+                      className="text-white/78 underline decoration-white/25 underline-offset-4 transition hover:text-white"
+                    >
+                      {publicContact.email}
+                    </a>
+                  ) : null}
+                  {publicContact.phone ? (
+                    <a
+                      href={`tel:${publicContact.phone.replace(/\s+/g, "")}`}
+                      className="text-white/78 underline decoration-white/25 underline-offset-4 transition hover:text-white"
+                    >
+                      {publicContact.phone}
+                    </a>
+                  ) : null}
+                </div>
+              </section>
+            ) : null}
           </div>
         </div>
       </section>
